@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>PixelSpiritDeck Editor</title>
+		<link href="/favicon.gif" rel="shortcut icon"/>
+
+        <link type="text/css" rel="stylesheet" href="build/glslEditor.css">
+        <script type="text/javascript" src="build/glslEditor.js"></script>
+
+         <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
+		<style>
+			body {
+				height: 100%;
+    			margin: 0;
+	  			background: #171e22;
+			}
+
+            .fake_code {
+                color: lightgray;
+                font-family: Source Code Pro,monospace;
+                font-size: 14px;
+                line-height: 0.5;
+                position: relative;
+                left: 18px;
+                height: auto;
+            }
+
+            .fake_comments {
+                color: gray;
+                font-family: Source Code Pro,monospace;
+                font-size: 14px;
+                line-height: 0.5;
+                position: relative;
+                left: 18px;
+                height: auto;
+            }
+
+			#glsl_editor {
+				height: 100%;
+			}
+
+            .ge_picker_modal * {
+                box-sizing: border-box;
+                border-color: gold;
+                border-width: 1px;
+                border-style: solid;
+            }
+
+            .ge_export_icon {
+                float: left;
+                right: 183px;
+                top: 23px;
+                border-radius: 0px;
+                width: 100px;
+                font-family: 'Cinzel Decorative', helvetica, sans-serif;
+                font-size: 18px;
+                font-weight: 600;
+                background-color: white;
+                color: black;
+                position: fixed;
+            }
+
+            .ge_canvas {
+                margin: 0;
+                padding: 0;
+                top: -115px;
+                left: -6px;
+                z-index: 200;
+                position: relative;
+                /* border-color: darkgray; */
+                /* border-style: solid; */
+                /* border-width: 1px; */
+                /* border-radius: 24px; */
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-variable-3 {
+                color: #B19F5F;
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-variable {
+                color: gold;
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-operator {
+                color: white;
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-number {
+                color: white;
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-keyword {
+                color: #B19F5F;
+            }
+
+            .cm-s-tomorrow-night-bright .cm-searching {
+                background: #796C41;
+            }
+
+            .cm-s-tomorrow-night-bright span.cm-comment {
+                color: #796C41
+            }
+
+            .cardTitle {
+                width: 100%;
+                font-family: 'Cinzel Decorative', helvetica, sans-serif;
+                font-size: 22px;
+                font-weight: 600;
+                background-color: rgba(255, 255, 255, 0);
+                color: black;
+                position: relative;
+                top: -194px;
+                text-align: center;
+                z-index: 1000;
+            }
+
+            a {
+                color: #B19F5F;
+            }
+
+            a:hover {
+                color: gold;
+            }
+
+		</style>
+	</head>
+	<body>
+        <div class='fake_comments'>
+            <p>&nbsp;</p>
+            <p>// All functions from <a href="http://pixelspiritdeck.com/" target='_blank'>ELEMENTS Deck</a> are pre-defined (*) </p> 
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+        </div>
+        <div class='fake_code'>
+            <p>void main(){</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;vec3 color = vec3(0.);</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;vec2 st = gl_FragCoord.xy/u_resolution.xy;</p>
+        </div>
+		<div id="glsl_editor" > </div>
+        <div class='fake_code'>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;gl_FragColor = vec4(color, 1.);</p>
+            <p>}</p>
+        </div>
+        <div class='fake_comments'>
+            <p>&nbsp;</p> 
+            <p>&nbsp;</p> 
+            <p>// *) <a href="http://pixelspiritdeck.com/" target='_blank'>ELEMENTS Deck</a> functions: </p> 
+            <p>//</p> 
+            <p>// 04 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/stroke.glsl" target='_blank'>stroke</a>(float x, float s, float w)</p> 
+            <p>// 08 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/circleSDF.glsl" target='_blank'>circleSDF</a>(vec2 st)</p> 
+            <p>// 09 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/fill.glsl" target='_blank'>fill</a>(float x, float size)</p> 
+            <p>// 11 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/rectSDF.glsl" target='_blank'>rectSDF</a>(vec2 st, vec2 s)</p> 
+            <p>// 12 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/crossSDF.glsl" target='_blank'>crossSDF</a>(vec2 st, float s)</p>
+            <p>// 12 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/fill.glsl" target='_blank'>fill</a>(float v, float pct)</p>
+            <p>// 15 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/vesicaSDF.glsl" target='_blank'>vesicaSDF</a>(vec2 st, float w)</p>
+            <p>// 16 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/triSDF.glsl" target='_blank'>triSDF</a>(vec2 st)</p>
+            <p>// 18 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/rhombSDF.glsl" target='_blank'>rhombSDF</a>(vec2 st)</p>
+            <p>// 20 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/rotate.glsl" target='_blank'>rotate</a>(vec2 st, float a)</p>
+            <p>// 27 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/polySDF.glsl" target='_blank'>polySDF</a>(vec2 st, int V)</p>
+            <p>// 28 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/hexSDF.glsl" target='_blank'>hexSDF</a>(vec2 st)</p>
+            <p>// 29 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/starSDF.glsl" target='_blank'>starSDF</a>(vec2 st, int V, float s)</p>
+            <p>// 31 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/raySDF.glsl" target='_blank'>raySDF</a>(vec2 st, int N)</p>
+            <p>// 35 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/heartSDF.glsl" target='_blank'>heartSDF</a>(vec2 st)</p>
+            <p>// 36 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/bridge.glsl" target='_blank'>bridge</a>(vec3 c, float d, float s, float w)</p>
+            <p>// 45 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/scale.glsl" target='_blank'>scale</a>(vec2 st, vec2 s)</p>
+            <p>// 47 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/flowerSDF.glsl" target='_blank'>flowerSDF</a>(vec2 st, int N)</p>
+            <p>// 48 <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/blob/master/lib/spiralSDF.glsl" target='_blank'>spiralSDF</a>(vec2 st, float t)</p>   
+            <p>// </p>             
+            <p>// More at: <a href="https://github.com/patriciogonzalezvivo/PixelSpiritDeck/tree/master/lib" target='_blank'>github.com/patriciogonzalezvivo/PixelSpiritDeck</a></p>
+        </div>
+	</body>
+
+	
+    <script type="text/javascript">
+    	window.glslEditor = new GlslEditor('#glsl_editor', {
+    		canvas_width: 449,
+            canvas_height: 751,
+    		theme: 'tomorrow-night-bright',
+            // theme: 'dracula',
+            // theme: 'icecoder',
+            // theme: 'monokai',
+            // theme: 'seti',
+            displayMenu: false,
+            menu: false,
+            tooltips: true,
+            exportIcon: true,
+            frag_header: "\n\
+#ifdef GL_ES\n\
+precision mediump float;\n\
+#endif\n\
+\n\
+uniform vec2 u_resolution;\n\
+uniform vec2 u_mouse;\n\
+uniform float u_time;\n\
+\n\
+uniform sampler2D u_texTemplate; // https://patriciogonzalezvivo.github.io/glslCards/html/imgs/tarot-merge.png\n\
+uniform vec2 u_texTemplateResolution;\n\
+\n\
+// math.h\n\
+#define QTR_PI 0.78539816339\n\
+#define HALF_PI 1.5707963267948966192313216916398\n\
+#define PI 3.1415926535897932384626433832795\n\
+#define TWO_PI 6.2831853071795864769252867665590\n\
+#define TAU 6.2831853071795864769252867665590\n\
+#define PHI 1.618033988749894848204586834\n\
+#define EPSILON 0.0000001\n\
+\n\
+#ifdef GL_OES_standard_derivatives\n\
+#extension GL_OES_standard_derivatives : enable\n\
+#endif\n\
+float aastep(float threshold, float value) {\n\
+    // The MIT License (MIT) Copyright (c) 2015 stackgl \n\
+    #ifdef GL_OES_standard_derivatives\n\
+    float afwidth = 0.7 * length(vec2(dFdx(value), dFdy(value)));\n\
+    return smoothstep(threshold-afwidth, threshold+afwidth, value);\n\
+    #else\n\
+    return step(threshold, value);\n\
+    #endif\n\
+}\n\
+\n\
+// PIXELSPIRITDECK - ELEMENTS\n\
+// Copyright (c) 2017 Patricio Gonzalez Vivo\n\
+// https://github.com/patriciogonzalezvivo/PixelSpiritDeck \n\
+\n\
+// Card 04\n\
+float stroke(float x, float size, float w) {\n\
+    float d = aastep(size, x+w*.5) - aastep(size, x-w*.5);\n\
+    return clamp(d, 0., 1.);\n\
+}\n\
+\n\
+// Card 08\n\
+float circleSDF(vec2 st) {\n\
+    return length(st-.5)*2.;\n\
+}\n\
+\n\
+// Card 09\n\
+float fill(float x, float size) {\n\
+    return 1.-aastep(size, x);\n\
+}\n\
+\n\
+// Card 10\n\
+float rectSDF(vec2 st, vec2 s) {\n\
+    st = st*2.-1.;\n\
+    return max( abs(st.x/s.x),\n\
+                abs(st.y/s.y) );\n\
+}\n\
+\n\
+// Card 11\n\
+float crossSDF(vec2 st, float s) {\n\
+    vec2 size = vec2(.25, s);\n\
+    return min( rectSDF(st.xy,size.xy),\n\
+                rectSDF(st.xy,size.yx));\n\
+}\n\
+\n\
+// Card 12\n\
+float flip(float v, float pct) {\n\
+    return mix(v, 1.-v, pct);\n\
+}\n\
+\n\
+// Card 14\n\
+float vesicaSDF(vec2 st, float w) {\n\
+    vec2 offset = vec2(w*.5,0.);\n\
+    return max( circleSDF(st-offset),\n\
+                circleSDF(st+offset));\n\
+}\n\
+\n\
+// Card 15\n\
+float triSDF(vec2 st) {\n\
+    st = (st*2.-1.)*2.;\n\
+    return max(abs(st.x) * 0.866025 + st.y * 0.5, -st.y * 0.5);\n\
+}\n\
+\n\
+// Card 17\n\
+float rhombSDF(vec2 st) {\n\
+    return max(triSDF(st),\n\
+               triSDF(vec2(st.x,1.-st.y)));\n\
+}\n\
+\n\
+// Card 19\n\
+vec2 rotate(vec2 st, float a) {\n\
+    st = mat2(cos(a),-sin(a),\n\
+              sin(a),cos(a))*(st-.5);\n\
+    return st+.5;\n\
+}\n\
+\n\
+// Card 26\n\
+float polySDF(vec2 st, int V) {\n\
+    st = st*2.-1.;\n\
+    float a = atan(st.x,st.y)+PI;\n\
+    float r = length(st);\n\
+    float v = TAU/float(V);\n\
+    return cos(floor(.5+a/v)*v-a)*r;\n\
+}\n\
+\n\
+// Card 27\n\
+float hexSDF(vec2 st) {\n\
+    st = abs(st*2.-1.);\n\
+    return max(abs(st.y), st.x * 0.866025 + st.y * 0.5);\n\
+}\n\
+\n\
+// Card 28\n\
+float starSDF(vec2 st, int V, float s) {\n\
+    st = st*4.-2.;\n\
+    float a = atan(st.y, st.x)/TAU;\n\
+    float seg = a * float(V);\n\
+    a = ((floor(seg) + 0.5)/float(V) + \n\
+        mix(s,-s,step(.5,fract(seg)))) \n\
+        * TAU;\n\
+    return abs(dot(vec2(cos(a),sin(a)),\n\
+                   st));\n\
+}\n\
+\n\
+// Card 30\n\
+float raysSDF(vec2 st, int N) {\n\
+    st -= .5;\n\
+    return fract(atan(st.y,st.x)/TAU*float(N));\n\
+}\n\
+\n\
+// Card 34\n\
+float heartSDF(vec2 st) {\n\
+    st -= vec2(.5,.8);\n\
+    float r = length(st)*5.;\n\
+    st = normalize(st);\n\
+    return r - \n\
+         ((st.y*pow(abs(st.x),0.67))/ \n\
+         (st.y+1.5)-(2.)*st.y+1.26);\n\
+}\n\
+\n\
+// Card 35\n\
+vec3 bridge(vec3 c, float d, float s, float w) {\n\
+    c *= 1.-stroke(d,s,w*2.);\n\
+    return c + stroke(d,s,w);\n\
+}\n\
+\n\
+// Card 44\n\
+vec2 scale(vec2 st, vec2 s) {\n\
+    return (st-.5)*s+.5;\n\
+}\n\
+\n\
+vec2 ratio(vec2 st, vec2 s) {\n\
+    return mix( vec2((st.x*s.x/s.y)-(s.x*.5-s.y*.5)/s.y,st.y), \n\
+                vec2(st.x,st.y*(s.y/s.x)-(s.y*.5-s.x*.5)/s.x), \n\
+                step(s.x,s.y));\n\
+}\n\
+\n\
+// Card 46\n\
+float flowerSDF(vec2 st, int N) {\n\
+    st = st*2.-1.;\n\
+    float r = length(st)*2.;\n\
+    float a = atan(st.y,st.x);\n\
+    float v = float(N)*.5;\n\
+    return 1.-(abs(cos(a*v))*.5+.5)/r;\n\
+}\n\
+\n\
+// Card 47\n\
+float spiralSDF(vec2 st, float t) {\n\
+    st -= .5;\n\
+    float r = dot(st,st);\n\
+    float a = atan(st.y,st.x);\n\
+    return abs(sin(fract(log(r)*t+a*0.159)));\n\
+}\n\
+\n\
+void main(){\n\
+    vec3 color = vec3(0.);\n\
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;\n\
+    st = ratio(st, u_resolution);\n\
+    st = scale(st, vec2(1.1912));\n\
+    //START\n\
+",
+            frag_footer: "\n\
+    //END\n\
+    \n\
+    // This just add the fake margins and deck decorations\n\
+    if (texture2D(u_texTemplate, vec2(.5)).a == .0) {\n\
+        vec2 uv = gl_FragCoord.xy/u_resolution.xy;\n\
+        uv = ratio(uv, u_resolution);\n\
+        uv = scale(uv, vec2(1.,u_texTemplateResolution.x/u_texTemplateResolution.y));\n\
+        vec4 colorTemplate = texture2D(u_texTemplate, uv);\n\
+        color = mix(color, colorTemplate.rgb, colorTemplate.a);\n\
+        color *= 1.-step(.99,uv.x);\n\
+        color *= 1.-step(.99,1.-uv.y);\n\
+    }\n\
+    gl_FragColor = vec4(color, 1.);\n\
+}\n"
+    	});
+
+        glslEditor.setContent("\
+// Title: Card Name\n\
+// Author: Your Name\n\
+// Contact: Your Twitter, Mail, FB or IG account\n\
+// Description: What this card means to you?\n\
+\n\
+color += stroke(circleSDF(st),.9,.1);\n\
+color += fill(flowerSDF(st.yx,3),.2);\n\
+color -= fill(triSDF(vec2(st.x,.98-st.y)),.15);\n\
+")
+
+        glslEditor.shader.canvas.setUniform("u_texTemplate","imgs/tarot-merge.png");
+
+        var shareButton = document.getElementsByClassName('ge_export_icon')[0];
+        shareButton.innerHTML = "Share";
+
+        var cardTitle = document.createElement('div');
+        cardTitle.className = 'cardTitle';
+        cardTitle.innerHTML = glslEditor.getTitle()
+        glslEditor.shader.canvas.canvas.parentNode.appendChild(cardTitle);
+
+        glslEditor.editor.on('change', () => {
+            cardTitle.innerHTML = glslEditor.getTitle()
+        });
+
+        document.body.style.backgroundColor = window.getComputedStyle(glslEditor.editor.getWrapperElement(),null).getPropertyValue('background-color');
+    </script>
+    <script>
+        (function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+        ga("create", "UA-18824436-2", "auto");
+        ga("send", "pageview");
+    </script>
+</html>
