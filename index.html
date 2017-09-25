@@ -136,7 +136,7 @@
         <div class='fake_code'>
             <p>void main(){</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;vec3 color = vec3(0.);</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;vec2 st = gl_FragCoord.xy/u_resolution.xy;</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;vec2 st = gl_FragCoord.xy/u_resolution;</p>
         </div>
 		<div id="glsl_editor" > </div>
         <div class='fake_code'>
@@ -389,12 +389,14 @@ void main(){\n\
         glslEditor.setContent("\
 // Title: Card Name\n\
 // Author: Your Name\n\
-// Contact: Your Twitter, Mail, FB or IG account\n\
-// Description: What does this card mean to you?\n\
+// Contact: Twitter, Mail, FB or IG\n\
+// Description: What does this card mean\n\
+//              to you?\n\
 \n\
 color += stroke(circleSDF(st),.9,.1);\n\
 color += fill(flowerSDF(st.yx,3),.2);\n\
-color -= fill(triSDF(vec2(st.x,.98-st.y)),.15);\n\
+color -= fill(triSDF(vec2(st.x,.98-st.y)),\n\
+              .15);\n\
 ")
 
         glslEditor.shader.canvas.setUniform("u_texTemplate","imgs/tarot-merge.png");
